@@ -1,3 +1,7 @@
+from fastai.vision.learner import create_body
+from torchvision.models.resnet import resnet18
+from fastai.vision.models.unet import DynamicUnet
+
 import os, sys
 import numpy as np
 import matplotlib.pyplot as plt
@@ -41,14 +45,12 @@ train_dl = DataLoader(GrayscaleColorizationDataset(train_paths),
                       batch_size = 16,
                       shuffle = True)
 
-val_dl = DataLoader(GrayscaleColorizationDataset(val_paths), 
-                    batch_size = 4,
-                    shuffle = False)
 
-data = next(iter(train_dl))
-L, ab = data['L'], data['ab']
-print(L.shape, ab.shape)
-print(len(train_dl), len(val_dl))
+def build_res_unet(n_input=1, n_output=2, size=256):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    body = create_body(resnet18, pretrained=True, n_in=n_input, cut=-2)
+    net_G = DynamicUnet(body, n_output, (size, size)).to(device)
+    return net_G
 
 test_transforms = transforms.Compose([
     transforms.Resize((256, 256),  Image.BICUBIC),
@@ -68,9 +70,9 @@ def img_load(img_path):
     return {'L': L, 'ab': ab}
 
 def test_model(model, epoch, test_data, save_dir):
-    torch.manual_seed(0)
-    np.random.seed(0)
-    model.load(epoch)
+    #torch.manual_seed(0)
+    #np.random.seed(0)
+    #model.load(epoch)
     model.generator.eval()
 
     output_dir = os.path.join(save_dir,"outputs")
@@ -107,41 +109,43 @@ def test_model(model, epoch, test_data, save_dir):
         if save:
             fig.savefig(os.path.join(output_dir,f"result_{i}.png"))
 
-
-def train_model(model, train_dl, epochs, save_dir, display_every=100):
-    data = next(iter(val_dl)) # getting a batch for visualizing the model output after fixed intrvals
+def pretrain_generator(net_G, train_dl, opt, criterion, epochs):
     for e in range(epochs):
-        loss_meter_dict = create_loss_meters() # function returing a dictionary of objects to 
-        i = 0                                  # log the losses of the complete network
-        for data in tqdm.tqdm(train_dl):
-            model.setup_input(data) 
-            model.optimize()
-            update_losses(model, loss_meter_dict, count=data['L'].size(0)) # function updating the log objects
-            i += 1
-            if i % display_every == 0:
-                print(f"\nEpoch {e}/{epochs}")
-                print(f"Iteration {i}/{len(train_dl)}")
-                log_results(loss_meter_dict, save_dir, e, i) # function to print out the losses
-                visualize(model, data, save=False) # function displaying the model's outputs
+        loss_meter = AverageMeter()
+        for data in tqdm(train_dl):
+            L, ab = data['L'].to(device), data['ab'].to(device)
+            preds = net_G(L)
+            loss = criterion(preds, ab)
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
             
-        print(f"\n Done Epoch {e}")
-        if (e % 10) == 0:
-            model.save(e)
-            print(f"\nModel Saved : Epoch {e}")
+            loss_meter.update(loss.item(), L.size(0))
+            
+        print(f"Epoch {e + 1}/{epochs}")
+        print(f"L1 Loss: {loss_meter.avg:.5f}")
 
 
 save_dir = "results"
 if not os.path.exists(save_dir):
     os.makedirs(save_dir)
 
-model = cGAN(save_dir)
-train_model(model, train_dl, 100, save_dir)
+    
+net_G = build_res_unet(n_input=1, n_output=2, size=256)
+#opt = optim.Adam(net_G.parameters(), lr=1e-4)
+#criterion = nn.L1Loss()        
+#pretrain_generator(net_G, train_dl, opt, criterion, 20)
+#torch.save(net_G.state_dict(), "res18-unet.pt")
 
-#List of image paths 
-#test_data = [im1, im2, im3...]
-#test_data = ["C:\\Users\\Himanshu\\.fastai\\data\\coco_sample\\train_sample\\000000000030.jpg",
+
+
+net_G.load_state_dict(torch.load("res18-unet.pt", map_location=device))
+model = cGAN(net_G=net_G)
+model.load_state_dict(torch.load("final_model_weights.pt", map_location=device))
+
+print("Model weights loaded")
+test_data = ["/home/pandotra/.fastai/data/coco_sample/train_sample/000000000030.jpg"]
+#test_data = ["C:\\Users\\Himanshu\\.fastai\\data\\coco_sample\\train_sample\\000000000030.jpg"]
 #"C:\\Users\\Himanshu\\.fastai\\data\\coco_sample\\train_sample\\000000000089.jpg"]
-#epoch = 2
-#test_model(model, epoch, test_data, save_dir)
-
-
+epoch = 0
+test_model(model, epoch, test_data, save_dir)
