@@ -8,6 +8,7 @@ import torch
 from torchvision import transforms
 from torchvision.utils import make_grid
 from torch.utils.data import Dataset, DataLoader
+import time
 
 from skimage.color import rgb2lab, lab2rgb
 
@@ -111,6 +112,10 @@ def visualize(model, data, save=True):
     if save:
         fig.savefig(f"colorization_{time.time()}.png")
         
-def log_results(loss_meter_dict):
+def log_results(loss_meter_dict, save_dir):
     for loss_name, loss_meter in loss_meter_dict.items():
         print(f"{loss_name}: {loss_meter.avg:.5f}")
+        
+        with open(os.path.join(save_dir,"train.log"),'a') as file:
+            file.write(f"{loss_name}: {loss_meter.avg:.5f}")
+            file.close()

@@ -16,12 +16,12 @@ from loss import GANLoss
 
 
 class cGAN(torch.nn.Module):
-    def __init__(self, generator_lr = 2e-4, discriminator_lr = 2e-4, 
+    def __init__(self, save_dir = "results", generator_lr = 2e-4, discriminator_lr = 2e-4, 
                  beta1 = 0.5, beta2 = 0.999, lambda_L1 = 100.):
         super().__init__()
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        
+        self.result_dir = save_dir
         self.lambda_L1 = lambda_L1
         
         self.generator = initialize_model(Generator(c_i = 1, c_o = 2, num_filters=64), self.device)
@@ -83,3 +83,17 @@ class cGAN(torch.nn.Module):
         self.generator_optimizer.zero_grad()
         self.backward_generator()
         self.generator_optimizer.step()
+
+    def save(self, epoch):
+        save_dir = os.path.join(self.result_dir)
+
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+
+        torch.save(self.generator.state_dict(), os.path.join(save_dir, 'models_' + str(epoch) + "_" + 'G.pkl'))
+        torch.save(self.discriminator.state_dict(), os.path.join(save_dir, 'models_' + str(epoch) + "_" + 'D.pkl'))
+
+    def load(self, epoch):
+        save_dir = os.path.join(self.result_dir)
+        self.generator.load_state_dict(torch.load(os.path.join(save_dir, 'models_' + str(epoch) + "_" + 'G.pkl')))
+        self.discriminator.load_state_dict(torch.load(os.path.join(save_dir, 'models_' + str(epoch) + "_" + 'D.pkl')))

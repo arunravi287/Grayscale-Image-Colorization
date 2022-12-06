@@ -13,7 +13,8 @@ from torch.utils.data import Dataset, DataLoader
 import glob
 from fastai.data.external import untar_data, URLs
 
-from utils import showImageGrid, create_loss_meters, update_losses, log_results, visualize
+from skimage.color import rgb2lab, lab2rgb
+from utils import showImageGrid, create_loss_meters, update_losses, log_results, visualize, lab_to_rgb
 from dataset import GrayscaleColorizationDataset
 from cgan import cGAN
 
@@ -39,15 +40,73 @@ train_dl = DataLoader(GrayscaleColorizationDataset(train_paths),
                       shuffle = True)
 
 val_dl = DataLoader(GrayscaleColorizationDataset(val_paths), 
-                    batch_size = 16,
-                    shuffle = True)
+                    batch_size = 4,
+                    shuffle = False)
 
 data = next(iter(train_dl))
 L, ab = data['L'], data['ab']
 print(L.shape, ab.shape)
 print(len(train_dl), len(val_dl))
 
-def train_model(model, train_dl, epochs, display_every=131):
+test_transforms = transforms.Compose([
+    transforms.Resize((256, 256),  Image.BICUBIC),
+])
+
+def img_load(img_path):
+
+    img = Image.open(img_path).convert("RGB")
+    img = np.array(test_transforms(img))
+    img_lab = transforms.ToTensor()(rgb2lab(img).astype("float32"))
+    L = img_lab[[0], ...] / 50. - 1. # Between -1 and 1
+    ab = img_lab[[1, 2], ...] / 110. # Between -1 and 1
+
+    L = torch.unsqueeze(L,0)
+    ab = torch.unsqueeze(ab,0)
+
+    return {'L': L, 'ab': ab}
+
+def test_model(model, epoch, test_data, save_dir):
+    torch.manual_seed(0)
+    np.random.seed(0)
+    model.load(epoch)
+    model.generator.eval()
+
+    output_dir = os.path.join(save_dir,"outputs")
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    for i, img in enumerate(test_data):
+        data = img_load(img)
+
+        with torch.no_grad():    
+            model.setup_input(data)
+            model.forward()
+        
+        fake_color = model.fake_color.detach()
+        real_color = model.ab
+        L = model.L
+        fake_imgs = lab_to_rgb(L, fake_color)
+        real_imgs = lab_to_rgb(L, real_color)
+        
+        fig = plt.figure(figsize=(15, 8))
+        
+        ax = plt.subplot(1, 3, 1)
+        ax.imshow(L[0].cpu(), cmap='gray')
+        ax.axis("off")
+        ax = plt.subplot(1, 3, 2)
+        ax.imshow(fake_imgs)
+        ax.axis("off")
+        ax = plt.subplot(1, 3, 3)
+        ax.imshow(real_imgs)
+        ax.axis("off")
+        plt.show()
+
+        save = True
+        if save:
+            fig.savefig(os.path.join(output_dir,f"result_{i}.png"))
+
+
+def train_model(model, train_dl, epochs, save_dir, display_every=131):
     data = next(iter(val_dl)) # getting a batch for visualizing the model output after fixed intrvals
     for e in range(epochs):
         loss_meter_dict = create_loss_meters() # function returing a dictionary of objects to 
@@ -60,8 +119,25 @@ def train_model(model, train_dl, epochs, display_every=131):
             if i % display_every == 0:
                 print(f"\nEpoch {e+1}/{epochs}")
                 print(f"Iteration {i}/{len(train_dl)}")
-                log_results(loss_meter_dict) # function to print out the losses
+                log_results(loss_meter_dict, save_dir) # function to print out the losses
                 visualize(model, data, save=False) # function displaying the model's outputs
+        
+        print(f"\n Done Epoch {e+1}")
+        if (e % 3) == 0:
+            model.save(e+1)
+            print(f"\nModel Saved : Epoch {e+1}")
 
-model = cGAN()
-train_model(model, train_dl, 20)
+
+save_dir = "results"
+if not os.path.exists(save_dir):
+    os.makedirs(save_dir)
+
+model = cGAN(save_dir)
+train_model(model, train_dl, 20, save_dir)
+
+#List of image paths 
+#test_data = [im1, im2, im3...] where im1 = {"img1.png","img2.png"...}
+#epoch = 20
+#test_model(model, epoch, test_data,save_dir)
+
+
