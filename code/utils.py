@@ -112,10 +112,12 @@ def visualize(model, data, save=True):
     if save:
         fig.savefig(f"colorization_{time.time()}.png")
         
-def log_results(loss_meter_dict, save_dir):
-    for loss_name, loss_meter in loss_meter_dict.items():
-        print(f"{loss_name}: {loss_meter.avg:.5f}")
-        
-        with open(os.path.join(save_dir,"train.log"),'a') as file:
-            file.write(f"{loss_name}: {loss_meter.avg:.5f}")
-            file.close()
+def log_results(loss_meter_dict, save_dir, epoch, iter):
+    
+    with open(os.path.join(save_dir,"train.log"),'a') as file:
+        file.write(f"Epoch: {epoch}, Iteration: {iter}, ")
+        for loss_name, loss_meter in loss_meter_dict.items():
+            print(f"{loss_name}: {loss_meter.avg:.5f}, ")
+            file.write(f"{loss_name}: {loss_meter.avg:.5f}, ")
+        file.write("\n")
+        file.close()

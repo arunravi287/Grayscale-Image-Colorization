@@ -1,4 +1,4 @@
-import os
+import os, sys
 import numpy as np
 import matplotlib.pyplot as plt
 import tqdm
@@ -21,6 +21,8 @@ from cgan import cGAN
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 coco_path = untar_data(URLs.COCO_SAMPLE)
 coco_path = str(coco_path) + "/train_sample"
+print(coco_path)
+#sys.exit()
 
 np.random.seed(42)
 paths = glob.glob(coco_path + "/*.jpg")
@@ -62,7 +64,7 @@ def img_load(img_path):
 
     L = torch.unsqueeze(L,0)
     ab = torch.unsqueeze(ab,0)
-
+    print("shape: L,ab",L.shape,ab.shape)
     return {'L': L, 'ab': ab}
 
 def test_model(model, epoch, test_data, save_dir):
@@ -91,22 +93,22 @@ def test_model(model, epoch, test_data, save_dir):
         fig = plt.figure(figsize=(15, 8))
         
         ax = plt.subplot(1, 3, 1)
-        ax.imshow(L[0].cpu(), cmap='gray')
+        ax.imshow(L[0][0].cpu(), cmap='gray')
         ax.axis("off")
         ax = plt.subplot(1, 3, 2)
-        ax.imshow(fake_imgs)
+        ax.imshow(fake_imgs[0])
         ax.axis("off")
         ax = plt.subplot(1, 3, 3)
-        ax.imshow(real_imgs)
+        ax.imshow(real_imgs[0])
         ax.axis("off")
-        plt.show()
+        #plt.show()
 
         save = True
         if save:
             fig.savefig(os.path.join(output_dir,f"result_{i}.png"))
 
 
-def train_model(model, train_dl, epochs, save_dir, display_every=131):
+def train_model(model, train_dl, epochs, save_dir, display_every=10):
     data = next(iter(val_dl)) # getting a batch for visualizing the model output after fixed intrvals
     for e in range(epochs):
         loss_meter_dict = create_loss_meters() # function returing a dictionary of objects to 
@@ -117,15 +119,15 @@ def train_model(model, train_dl, epochs, save_dir, display_every=131):
             update_losses(model, loss_meter_dict, count=data['L'].size(0)) # function updating the log objects
             i += 1
             if i % display_every == 0:
-                print(f"\nEpoch {e+1}/{epochs}")
+                print(f"\nEpoch {e}/{epochs}")
                 print(f"Iteration {i}/{len(train_dl)}")
-                log_results(loss_meter_dict, save_dir) # function to print out the losses
+                log_results(loss_meter_dict, save_dir, e, i) # function to print out the losses
                 visualize(model, data, save=False) # function displaying the model's outputs
-        
-        print(f"\n Done Epoch {e+1}")
-        if (e % 3) == 0:
-            model.save(e+1)
-            print(f"\nModel Saved : Epoch {e+1}")
+            
+        print(f"\n Done Epoch {e}")
+        if (e % 5) == 0:
+            model.save(e)
+            print(f"\nModel Saved : Epoch {e}")
 
 
 save_dir = "results"
@@ -136,8 +138,10 @@ model = cGAN(save_dir)
 train_model(model, train_dl, 20, save_dir)
 
 #List of image paths 
-#test_data = [im1, im2, im3...] where im1 = {"img1.png","img2.png"...}
-#epoch = 20
-#test_model(model, epoch, test_data,save_dir)
+#test_data = [im1, im2, im3...]
+#test_data = ["C:\\Users\\Himanshu\\.fastai\\data\\coco_sample\\train_sample\\000000000030.jpg",
+#"C:\\Users\\Himanshu\\.fastai\\data\\coco_sample\\train_sample\\000000000089.jpg"]
+#epoch = 2
+#test_model(model, epoch, test_data, save_dir)
 
 
