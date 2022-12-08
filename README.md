@@ -20,7 +20,7 @@ In this project, we use a conditional generative adversarial network for coloriz
 ### Dataset
 We will use the [Common Objects in Context (COCO-stuff)](https://arxiv.org/pdf/1405.0312.pdf) dataset which consists of over 200k labeled images and 80 object categories for our experiments. We also plan to use a subset of the ImageNet data to train and evaluate our model. Specifically, we will use the first 5000 validation images in ImageNet to evaluate our model using the FID score. This is the current standard adopted by recent works for comparison.
 
-We plan to use subsets of ImageNet and COCO-stuff and check cross-domain performance of the model. i.e given a model trained on COCO-stuff, how well it performs on ImageNet. **Our current (proof-of-concept) model (trained till now)  uses 2100 images for training and 900 images for validation.** To setup the training data, we convert the RGB images to Lab color space, which we use in our technique. The use of Lab color space for coloration problems is well established in prior-work.
+We plan to use subsets of ImageNet and COCO-stuff and check cross-domain performance of the model. i.e given a model trained on COCO-stuff, how well it performs on ImageNet. **Our current model uses 8000 images for training** To setup the training data, we convert the RGB images to Lab color space, which we use in our technique. The use of Lab color space for coloration problems is well established in prior-work.
 
 ## Model Architecture
 ### GAN
