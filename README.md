@@ -30,30 +30,30 @@ A GAN consists of a generator and a discriminator network. The generator is trai
 
  The above two steps are repeated as the generator and discriminator are involved in a min-max game. The objective function used to optimize the GAN is a mixture of losses of the generator and discriminator and is given as follows - 
 
-$$
-    \mathcal{L}_{GAN}(G, D) = \mathbb{E}_{\textbf{x $\sim$ p}_{data}}[\text{log} D(\textbf{x})] + \mathbb{E}_{\textbf{z $\sim$ p(\textbf{z})}}[\text{log} (1 - D(G(\textbf{z})))]
-$$
+<p align="center">
+    <img src="results/equations/one.png">
+</p>
 
 where G and D are the generator and discriminator networks, **x** is the input image, and **z** is the randomly samples noise vector.
 
 ### Conditional GANs (cGAN)
 The training in GAN's is completely unsupervised, that is, the actual labels are not fed as input to the networks. In a conditional GAN (cGAN), an additional input is fed into the generator alongside the noise vector and also in the discriminator network. In this type of GAN, the discriminator will classify whether the generated image is real or fake conditioned on the input. The conditional input can be anything like a label or an image itself. In translation tasks, the conditional input is typically an image which needs to be translated. The objective function to train a cGAN is very similar to that used to train a GAN, with the addition of the conditioning. The objective is given below -
 
-$$
-    \mathcal{L}_{GAN}(G, D) = \mathbb{E}_{\textbf{x $\sim$ p}_{data}}[\text{log} D(\textbf{x}|y)] + \mathbb{E}_{\textbf{z $\sim$ p(\textbf{z})}}[\text{log} (1 - D(G(\textbf{z}|y)))]
-$$
+<p align="center">
+    <img src="results/equations/two.png">
+</p>
 
 However, for the case of colorizing grayscale images, the task of the generator is to not only fool the discriminator, but also to be as close to ground truth as possible. To do this we can either introduce L1 or L2 loss into the training process. We use the L1 loss as opposed to the L2 loss, as L2 encourages blurring of the image. The L1 loss also acts as a regularizer for the generator, in the sense that it tries to keep outputs generated as close as possible to the ground truth. Thus, the final combined loss function we optimize is as shown below - 
 
-$$
-    \mathcal{L} = \text{arg min$_G$ max$_D$} \mathcal{L}_{GAN}(G, D) + \lambda \mathcal{L}_{L1}(G)
-$$
+<p align="center">
+    <img src="results/equations/three.png">
+</p>
 
 ### UNet (Generator)
-The generator network used in the cGAN for grayscale image colorization is a  UNet. An important aspect of image colorization is that a network maps high resolution inputs to high resolution outputs. While the input and output may have differences, their underlying structure remains the same. A common strategy to maintain such structure is to use encoder-decoder based networks. An UNet is a form of encoder-decoder network with additional skip connections. These skip connections help concatenates all channels at layer $i$ and layer $n - i$. These skip connections help in reducing the amount of information flowing through the network, and helps sharing of information amongst layers.
+The generator network used in the cGAN for grayscale image colorization is a  UNet. An important aspect of image colorization is that a network maps high resolution inputs to high resolution outputs. While the input and output may have differences, their underlying structure remains the same. A common strategy to maintain such structure is to use encoder-decoder based networks. An UNet is a form of encoder-decoder network with additional skip connections. These skip connections help concatenates all channels at layer *i* and layer *n - i*. These skip connections help in reducing the amount of information flowing through the network, and helps sharing of information amongst layers.
 
 ### PatchGAN (Discriminator)
-A discriminator typically checks if a generated image is real or fake. However, checking if an entire image is real or fake is slightly expensive. Thus, the authors of the paper  [Image-to-Image Translation](https://arxiv.org/abs/1611.07004) have used a PatchGAN architecture of the discriminator which classifies patches of an image as real or fake. This reduces the number of parameters in the discriminator as well as checks image quality at a local patch level helping remove artifacts. Also it helps the cGAN to monitor high frequency structure of the image.
+A discriminator typically checks if a generated image is real or fake. However, checking if an entire image is real or fake is slightly expensive. Thus, the authors of the paper [Image-to-Image Translation](https://arxiv.org/abs/1611.07004) have used a PatchGAN architecture of the discriminator which classifies patches of an image as real or fake. This reduces the number of parameters in the discriminator as well as checks image quality at a local patch level helping remove artifacts. Also it helps the cGAN to monitor high frequency structure of the image.
 
 ## Training
 We trained the conditional UNet based cGAN on 8000 images for 100 epochs. Attached below are the results obtained - the picture on the left is the grayscale image, the picture on the right is the original colored image, the picture in the center is version produced by our model.
@@ -68,6 +68,8 @@ We trained the conditional UNet based cGAN on 8000 images for 100 epochs. Attach
     <img src="results/lab/result_123.png">
 </p>
 
+## Inference
+
 ## Experiments
 
 ### Different forms of Grayscale
@@ -77,7 +79,6 @@ We trained the conditional UNet based cGAN on 8000 images for 100 epochs. Attach
     <img src="results/grayscale/two.png">
     <img src="results/grayscale/three.png">
 </p>
-
 
 
 <p align="center">
