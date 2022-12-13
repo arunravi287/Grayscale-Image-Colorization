@@ -12,15 +12,10 @@ from torch.utils.data import Dataset, DataLoader
 class GANLoss(torch.nn.Module):
     def __init__(self):
         super().__init__()
-        self.register_buffer('real_label', torch.tensor(1.0))
-        self.register_buffer('fake_label', torch.tensor(0.0))
         self.loss = torch.nn.BCEWithLogitsLoss()
     
     def get_labels(self, preds, target_is_real):
-        if target_is_real:
-            labels = self.real_label
-        else:
-            labels = self.fake_label
+        labels = torch.tensor(1.0) if target_is_real else torch.tensor(0.0)
         return labels.expand_as(preds)
     
     def __call__(self, preds, target_is_real):

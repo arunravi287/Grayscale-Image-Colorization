@@ -65,10 +65,7 @@ class UnetBlock(torch.nn.Module):
         self.model = torch.nn.Sequential(*model)
     
     def forward(self, x):
-        if self.outermost:
-            return self.model(x)
-        else:
-            return torch.cat([x, self.model(x)], 1)
+        return self.model(x) if self.outermost else torch.cat([x, self.model(x)], 1)
 
 class Generator(torch.nn.Module):
  
