@@ -65,17 +65,28 @@ We trained the conditional UNet based cGAN on 8000 images for 100 epochs. The im
     <img src="results/lpips/six.png">
 </p>
 
+### Hyperparameters
+
 ## Inference
 We calculate FID and LPIPS on the 2000 images from the COCO-stuff validation set. The average test set LPIPS was 0.139. The table below highlights the FID scores - 
 
-| **Our Model (UNet + ResNet Encoder)**                                          | **Pix2Pix** | **Palette (SOTA)**|
-| -------------------------------------------------- | -------------------------- |-------------------------- |
-|21.2 | 24.41 | 15.78|
-
+<table>
+  <tr>
+    <th>Our Model (UNet + ResNet Encoder)</th>
+    <th>Pix2Pix</th>
+    <th>Palette (SOTA)</th>
+  </tr>
+  <tr>
+    <td>21.2</td>
+    <td>24.41</td>
+    <td>15.78</td>
+  </tr>
+</table>
 
 ## Experiments
 
-### Different forms of Grayscale
+### Different forms of Grayscale Input
+
 
 <p align="center">
     <img src="results/labvsluv/one.png">
@@ -83,6 +94,7 @@ We calculate FID and LPIPS on the 2000 images from the COCO-stuff validation set
 </p>
 
 ### Results on Real Images
+We tested the model on the images we clicked with an iPhone. While the model does not perform well, we can still see that it is able to predict some shades of the right color.
 
 <p align="center">
     <img src="results/realimages/one.png">
