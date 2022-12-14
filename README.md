@@ -15,12 +15,10 @@ Very recently, diffusion models have become popular for solving many generative 
 In this work, first we implement a GAN based image-to-image translation model for the coloration task.
 
 ## Methodology
-In this project, we use a conditional generative adversarial network for colorizing gray-scale images as described in  [*"Image-to-Image Translation with Conditional Adversarial Networks"*](https://arxiv.org/abs/1611.07004). The paper experiments on the viability of using conditional GANs as general purpose image-to-image translation models. We plan on adopting this model specifically for the problem of gray-scale image colorization.
+We use a conditional generative adversarial network for colorizing gray-scale images as described in  [*"Image-to-Image Translation with Conditional Adversarial Networks"*](https://arxiv.org/abs/1611.07004). The paper experiments on the viability of using conditional GANs as general purpose image-to-image translation models. We plan on adopting this model specifically for the problem of gray-scale image colorization.
 
 ### Dataset
-We will use the [Common Objects in Context (COCO-stuff)](https://arxiv.org/pdf/1405.0312.pdf) dataset which consists of over 200k labeled images and 80 object categories for our experiments. We also plan to use a subset of the ImageNet data to train and evaluate our model. Specifically, we will use the first 5000 validation images in ImageNet to evaluate our model using the FID score. This is the current standard adopted by recent works for comparison.
-
-We plan to use subsets of ImageNet and COCO-stuff and check cross-domain performance of the model. i.e given a model trained on COCO-stuff, how well it performs on ImageNet. **Our current model uses 8000 images for training** To setup the training data, we convert the RGB images to Lab color space, which we use in our technique. The use of Lab color space for coloration problems is well established in prior-work.
+We will use the [Common Objects in Context (COCO-stuff)](https://arxiv.org/pdf/1405.0312.pdf) dataset which consists of over 200k labeled images and 80 object categories for our experiments. We sample 10,000 random images from COCO-stuff and use 8,000 images for training and 2,000 images for inference. During inference we calculate the Fréchet Inception Distance (FID) and the Learned Perceptual Image Patch Similarity (LPIPS) metrics on the inference data.
 
 ## Model Architecture
 ### GAN
@@ -56,35 +54,32 @@ The generator network used in the cGAN for grayscale image colorization is a  UN
 A discriminator typically checks if a generated image is real or fake. However, checking if an entire image is real or fake is slightly expensive. Thus, the authors of the paper [Image-to-Image Translation](https://arxiv.org/abs/1611.07004) have used a PatchGAN architecture of the discriminator which classifies patches of an image as real or fake. This reduces the number of parameters in the discriminator as well as checks image quality at a local patch level helping remove artifacts. Also it helps the cGAN to monitor high frequency structure of the image.
 
 ## Training
-We trained the conditional UNet based cGAN on 8000 images for 100 epochs. Attached below are the results obtained - the picture on the left is the grayscale image, the picture on the right is the original colored image, the picture in the center is version produced by our model.
+We trained the conditional UNet based cGAN on 8000 images for 100 epochs. The images from the COCO-stuff dataset are first converted into the Lab color space. The L channel from the Lab color space is akin to a grayscale version of the image. Thus, the L channel is fed as input into the cGAN, and the model outputs the ab channels of the image. Attached below are the results obtained - the picture on the left is the original colored image, the picture in the middle is the input grayscale image, and the image on the right is the output produced by our model.
 
 <p align="center">
-    <img src="results/lab/result_8.png">
-    <img src="results/lab/result_1763.png">
-    <img src="results/lab/result_48.png">
-    <img src="results/lab/result_51.png">
-    <img src="results/lab/result_53.png">
-    <img src="results/lab/result_84.png">
-    <img src="results/lab/result_123.png">
+    <img src="results/lpips/one.png">
+    <img src="results/lpips/two.png">
+    <img src="results/lpips/three.png">
+    <img src="results/lpips/four.png">
+    <img src="results/lpips/five.png">
+    <img src="results/lpips/six.png">
 </p>
 
 ## Inference
+We calculate FID and LPIPS on the 2000 images from the COCO-stuff validation set. The average test set LPIPS was 0.139. The table below highlights the FID scores - 
+
+| **Our Model (UNet + ResNet Encoder)**                                          | **Pix2Pix** | **Palette (SOTA)**|
+| -------------------------------------------------- | -------------------------- |-------------------------- |
+|21.2 | 24.41 | 15.78|
+
 
 ## Experiments
 
 ### Different forms of Grayscale
 
 <p align="center">
-    <img src="results/grayscale/one.png">
-    <img src="results/grayscale/two.png">
-    <img src="results/grayscale/three.png">
-</p>
-
-
-<p align="center">
     <img src="results/labvsluv/one.png">
     <img src="results/labvsluv/two.png">
-    <img src="results/labvsluv/three.png">
 </p>
 
 ### Results on Real Images
