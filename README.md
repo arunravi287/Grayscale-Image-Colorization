@@ -66,7 +66,7 @@ We trained the conditional UNet based cGAN on 8000 images for 100 epochs. The im
 
 ### Hyperparameters
 
-The learning rate we used for the generator and discriminator is 0.0001. The contsant which controls the amount L1 loss contributes to the overall loss was set to 100. The values of momentum constants fed into the Adam Optimizer are 0.5 and 0.999.
+The learning rate we used for the generator and discriminator is 0.0001. The constant which controls the amount L1 loss contributes to the overall loss was set to 100. The values of momentum constants fed into the Adam Optimizer are 0.5 and 0.999.
 
 ## Inference
 We calculate FID and LPIPS on the 2000 images from the COCO-stuff validation set. The average test set LPIPS was 0.139. The table below highlights the FID scores - 
