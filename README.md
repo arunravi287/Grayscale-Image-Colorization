@@ -12,12 +12,9 @@ One of the recent works in coloration is [Instance Aware Image Colorization](htt
 
 Very recently, diffusion models have become popular for solving many generative modelling tasks and have achieved state-of-art results. [Palette: Image-to-Image Diffusion Models](https://arxiv.org/abs/2111.05826) is a recent work on which combines image-to-image translation with diffusion modelling to solve many translation tasks like coloration. Unlike other methods which use the LAB color space, they directly generate RGB outputs.
 
-In this work, first we implement a GAN based image-to-image translation model for the coloration task.
+In this work, first we implement a GAN based image-to-image translation model for the coloration task. We use a conditional generative adversarial network for colorizing gray-scale images as described in  [*"Image-to-Image Translation with Conditional Adversarial Networks"*](https://arxiv.org/abs/1611.07004). The paper experiments on the viability of using conditional GANs as general purpose image-to-image translation models. We plan on adopting this model specifically for the problem of gray-scale image colorization.
 
-## Methodology
-We use a conditional generative adversarial network for colorizing gray-scale images as described in  [*"Image-to-Image Translation with Conditional Adversarial Networks"*](https://arxiv.org/abs/1611.07004). The paper experiments on the viability of using conditional GANs as general purpose image-to-image translation models. We plan on adopting this model specifically for the problem of gray-scale image colorization.
-
-### Dataset
+## Dataset
 We will use the [Common Objects in Context (COCO-stuff)](https://arxiv.org/pdf/1405.0312.pdf) dataset which consists of over 200k labeled images and 80 object categories for our experiments. We sample 10,000 random images from COCO-stuff and use 8,000 images for training and 2,000 images for inference. During inference we calculate the Fréchet Inception Distance (FID) and the Learned Perceptual Image Patch Similarity (LPIPS) metrics on the inference data.
 
 ## Colorspaces
