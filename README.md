@@ -1,7 +1,7 @@
 # Grayscale-Image-Colorization
 
 ## Introduction
-In this project, we will tackle the problem of image colorization, i.e. given an input gray-scale image, we output a color image. The problem of image colorization present many challenges. Firstly, this is an ill-posed problem as we need to predict multiple values (color) per pixel given only one value per pixel. Secondly, blending the colors to form a perceptually descent output can be non-trivial compared to coloring a particular object instance. Also, certain objects/entities/scenes can have multiple colors, e.g. the color of the sky during day and night, the color of a car etc. Considering these issues, image colorization still remains an open research problem.
+In this project, we will tackle the problem of image colorization, i.e. given an input gray-scale image, we output a color image. The problem of image colorization presents many challenges. Firstly, this is an ill-posed problem as we need to predict multiple values (color) per pixel given only one value per pixel. Secondly, blending the colors to form a perceptually descent output can be non-trivial compared to coloring a particular object instance. Also, certain objects/entities/scenes can have multiple colors, e.g. the color of the sky during day and night, the color of a car etc. Considering these issues, image colorization still remains an open research problem.
 
 Some of the applications of image colorization, which include enhancement of old images taken from analog film cameras, colorization of sketch images, compressing images etc, make colorization an interesting problem to solve.
 
@@ -19,6 +19,8 @@ We use a conditional generative adversarial network for colorizing gray-scale im
 
 ### Dataset
 We will use the [Common Objects in Context (COCO-stuff)](https://arxiv.org/pdf/1405.0312.pdf) dataset which consists of over 200k labeled images and 80 object categories for our experiments. We sample 10,000 random images from COCO-stuff and use 8,000 images for training and 2,000 images for inference. During inference we calculate the Fréchet Inception Distance (FID) and the Learned Perceptual Image Patch Similarity (LPIPS) metrics on the inference data.
+
+## Colorspaces
 
 ## Model Architecture
 ### GAN
@@ -67,6 +69,8 @@ We trained the conditional UNet based cGAN on 8000 images for 100 epochs. The im
 
 ### Hyperparameters
 
+The learning rate we used for the generator and discriminator is 0.0001. The contsant which controls the amount L1 loss contributes to the overall loss was set to 100. The values of momentum constants fed into the Adam Optimizer are 0.5 and 0.999.
+
 ## Inference
 We calculate FID and LPIPS on the 2000 images from the COCO-stuff validation set. The average test set LPIPS was 0.139. The table below highlights the FID scores - 
 
@@ -86,6 +90,7 @@ We calculate FID and LPIPS on the 2000 images from the COCO-stuff validation set
 ## Experiments
 
 ### Different forms of Grayscale Input
+We also experimented on how the output differs when we change the type of grayscale image input into the model. For this experiment, we convert the original colored image into - a) YCbCr image b) Linearly RGB Weighted Grayscale Image. The Y channel of the YCbCr image is grayscale. Thus we input the Y channel into the model. The below results show the images generated when we use varying grayscale images as input. We see that the colored images produced are very similar, and this can also be seen in the corresponding LPIPS scores.
 
 
 <p align="center">
@@ -94,7 +99,7 @@ We calculate FID and LPIPS on the 2000 images from the COCO-stuff validation set
 </p>
 
 ### Results on Real Images
-We tested the model on the images we clicked with an iPhone. While the model does not perform well, we can still see that it is able to predict some shades of the right color.
+We tested the model on the images we clicked with an iPhone. While the model does not perform well, we can still see that it is able to predict some shades of the right color. The picture on the left is the original colored image, the picture in the middle is the input grayscale image, and the image on the right is the output produced by our model.
 
 <p align="center">
     <img src="results/realimages/one.png">
