@@ -73,7 +73,7 @@ We calculate FID and LPIPS on the 2000 images from the COCO-stuff validation set
 
 <table>
   <tr>
-    <th>Our Model (UNet + ResNet Encoder)</th>
+    <th>Our Model</th>
     <th>Pix2Pix</th>
     <th>Palette (SOTA)</th>
   </tr>
