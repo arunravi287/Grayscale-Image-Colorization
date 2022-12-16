@@ -1,15 +1,15 @@
 # Grayscale-Image-Colorization
 
 ## Introduction
-In this project, we will tackle the problem of image colorization, i.e. given an input gray-scale image, we output a color image. The problem of image colorization presents many challenges. Firstly, this is an ill-posed problem as we need to predict multiple values (color) per pixel given only one value per pixel. Secondly, blending the colors to form a perceptually descent output can be non-trivial compared to coloring a particular object instance. Also, certain objects/entities/scenes can have multiple colors, e.g. the color of the sky during day and night, the color of a car etc. Considering these issues, image colorization still remains an open research problem.
+In this project, we tackle the problem of image colorization, i.e. given an input gray-scale image, we output a color image. The problem of image colorization presents many challenges. Firstly, this is an ill-posed problem as we need to predict multiple values (color) per pixel given only one value per pixel. Secondly, blending the colors to form a perceptually descent output can be non-trivial compared to coloring a particular object instance. Also, certain objects/entities/scenes can have multiple colors, e.g. the color of the sky during day and night, the color of a car etc. Considering these issues, image colorization still remains an open research problem.
 
-Some of the applications of image colorization, which include enhancement of old images taken from analog film cameras, colorization of sketch images, compressing images etc, make colorization an interesting problem to solve. In this work, first we implement a GAN based image-to-image translation model for the coloration task. We use a conditional generative adversarial network for colorizing gray-scale images as described in  [*"Image-to-Image Translation with Conditional Adversarial Networks"*](https://arxiv.org/abs/1611.07004). The paper experiments on the viability of using conditional GANs as general purpose image-to-image translation models. We plan on adopting this model specifically for the problem of gray-scale image colorization. The below image shows what we wish to accomplish.
+Some of the applications of image colorization, which include enhancement of old images taken from analog film cameras, colorization of sketch images, compressing images etc, make colorization an interesting problem to solve. In this work, first we implement a GAN based image-to-image translation model for the coloration task. We use a conditional generative adversarial network for colorizing gray-scale images as described in  [*"Image-to-Image Translation with Conditional Adversarial Networks"*](https://arxiv.org/abs/1611.07004). The paper experiments on the viability of using conditional GANs as general purpose image-to-image translation models. We plan on adopting this model specifically for the problem of gray-scale image colorization. We utilize L*a*b* color space for solving this problem. That is, given the L* channel, we predict the a and b channels via the generative network and combine with L channel to generate a colorful output, as shown below.
 
 <p align="center">
     <img src="images/intro.png">
 </p>
 
-## State of the Art
+## Related Work
 Many different deep-learning based techniques have been employed to solve the colorization problem. Models like [Deep Colorization](https://arxiv.org/abs/1605.00075), [Colorful Colorization](https://arxiv.org/abs/1603.08511), and [Deep Depth Colorization](https://arxiv.org/abs/1703.10881), use CNN's to colorize an image. Certain works utilize GAN's to colorize images, such as [Unsupervised Diverse Colorization](https://arxiv.org/abs/1702.06674), [Image-to-Image Translation](https://arxiv.org/abs/1611.07004), and [ChromaGAN](https://ieeexplore.ieee.org/document/9093389). GAN's generate color by making the Generator and Discriminator networks compete with one another. The Generator tries to out-smart the Discriminator, and the Discriminator distinguishes between the output and the colors generated. 
 
 One of the recent works in coloration is [Instance Aware Image Colorization](https://arxiv.org/abs/2005.10825) which is an [Exemplar-based colorization technique](https://arxiv.org/abs/2008.10774). The model consists of an off the shelf object detector, an object instance colorizer, a full image colorizer, and a fusion model which blends the outputs of the two colorizer networks. This model outperforms other models such as [Let There be Color!](https://dl.acm.org/doi/10.1145/2897824.2925974) and [Automatic Colorizer](https://arxiv.org/abs/1603.06668).
@@ -20,6 +20,22 @@ Very recently, diffusion models have become popular for solving many generative 
 We will use the [Common Objects in Context (COCO-stuff)](https://arxiv.org/pdf/1405.0312.pdf) dataset which consists of over 200k labeled images and 80 object categories for our experiments. We sample 10,000 random images from COCO-stuff and use 8,000 images for training and 2,000 images for inference. During inference we calculate the Fréchet Inception Distance (FID) and the Learned Perceptual Image Patch Similarity (LPIPS) metrics on the inference data.
 
 ## Colorspaces
+
+A color gamut defines the space of colors a color model is capable of representing. The CIE XYZ color space as shown by the shaded region in figure below represents 
+the region which is visible to human eyes. Inside this region, many color models have been developed based on different needs like image acquistion techniques,
+display devices, perceivability and more. One of the most  common color spaces is the sRGB color space which is adpoted as a standard color space for the World Wide Web. 
+
+<p align="center">
+    <img src="images/color_gamut.png">
+</p>
+
+One of the important color spaces is the CIE L*a*b* color space which was designed to be be perceptually uniform. That is, a numeric change should correspond to similar perceived change in color. The range of variation of L (Lightness), a(green-red), b(blue-yellow) is described in the figure below.
+
+We adopt this Lab color space for solving the coloration problem as adopted by many other works in coloration.
+
+<p align="center">
+    <img src="images/lab.png">
+</p>
 
 ## Model Architecture
 ### GAN
