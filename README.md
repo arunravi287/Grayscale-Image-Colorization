@@ -124,12 +124,13 @@ We calculate FID and LPIPS on 2000 images from the COCO-stuff validation set. Th
     <th>Pix2Pix</th>
     <th>Palette (SOTA)</th>
   </tr>
-  <tr style="text-align: center">
-    <td>21.2</td>
-    <td>24.41</td>
-    <td>15.78</td>
+  <tr>
+    <td style="margin: auto">21.2</td>
+    <td style="margin: auto">24.41</td>
+    <td style="margin: auto">15.78</td>
   </tr>
 </table>
+
 
 We see that there is a performance gap compared to state-of-the-art model, Pallete. This diffusion based model is able to perform much better but it also has certain limitations. Specifically, the inference step of diffusion models is slow. Therefore, GAN based models are still useful in cases where faster inference is required.
 
