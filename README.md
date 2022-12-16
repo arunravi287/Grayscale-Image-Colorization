@@ -161,7 +161,7 @@ We tested the model on images we clicked with an iPhone. While the model is not 
 
 ## References
 
-1. Image-to-Image Translation with Conditional Adversarial Networks, https://doi.org/10.48550/arxiv.1611.07004, Isola, Phillip and Zhu, Jun-Yan and Zhou, Tinghui and Efros, Alexei A. CVPR, 2016 ![image](https://user-images.githubusercontent.com/10402776/207995576-8bc251cb-0fe4-403d-9221-d76a3e42b771.png)
+1. Image-to-Image Translation with Conditional Adversarial Networks, https://doi.org/10.48550/arxiv.1611.07004, Isola, Phillip and Zhu, Jun-Yan and Zhou, Tinghui and Efros, Alexei A. CVPR, 2016
 
 2. [Palette: Image-to-Image Diffusion Models, Chitwan Saharia et.al 2021] (https://arxiv.org/abs/2111.05826)
 
