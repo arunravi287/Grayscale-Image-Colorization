@@ -74,10 +74,16 @@ The following image shows a block diagram of a Conditional GAN.
 </p>
 
 ### UNet (Generator)
-The generator network used in the cGAN for grayscale image colorization is a  UNet. An important aspect of image colorization is that a network maps high resolution inputs to high resolution outputs. While the input and output may have differences, their underlying structure remains the same. A common strategy to maintain such structure is to use encoder-decoder based networks. An UNet is a form of encoder-decoder network with additional skip connections. These skip connections help concatenates all channels at layer *i* and layer *n - i*. These skip connections help in reducing the amount of information flowing through the network, and helps sharing of information amongst layers. The below image depicts a standard UNet. 
+The generator network used in the cGAN for grayscale image colorization is a UNet. An important aspect of image colorization is that a network maps high resolution inputs to high resolution outputs. While the input and output may have differences, their underlying structure remains the same. A common strategy to maintain such structure is to use encoder-decoder based networks. An UNet is a form of encoder-decoder network with additional skip connections. These skip connections help concatenates all channels at layer *i* and layer *n - i*. These skip connections help in reducing the amount of information flowing through the network, and helps sharing of information amongst layers. The below image depicts a standard UNet. 
 
 <p align="center">
     <img src="images/unet.png">
+</p>
+
+Recently, it has been shown that replacing the standard encoder in UNet with ResNet blocks can improve the performance on image-to-image translation tasks. As shown in figure below, each downsampling layer is a Resnet Block. We adapt this Unet encoder architecture for our model.
+
+<p align="center">
+    <img src="images/unet_resnet.png">
 </p>
 
 ### PatchGAN (Discriminator)
