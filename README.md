@@ -125,9 +125,9 @@ We calculate FID and LPIPS on 2000 images from the COCO-stuff validation set. Th
     <th>Palette (SOTA)</th>
   </tr>
   <tr>
-    <td>21.2</td>
-    <td>24.41</td>
-    <td>15.78</td>
+    <td style="text-align: center">21.2</td>
+    <td style="text-align: center">24.41</td>
+    <td style="text-align: center">15.78</td>
   </tr>
 </table>
 
