@@ -30,8 +30,7 @@ display devices, perceivability and more. One of the most  common color spaces i
 </p>
 
 One of the important color spaces is the CIE L*a*b* color space which was designed to be be perceptually uniform. That is, a numeric change should correspond to similar perceived change in color. The range of variation of L (Lightness), a(green-red), b(blue-yellow) is described in the figure below.
-
-We adopt this Lab color space for solving the coloration problem as adopted by many other works in coloration.
+The Lab color space is effective at modelling color variations perceptually similar to humans making it suitable for the image coloration task. Following other works, we adopt this Lab color space for solving the coloration problem.
 
 <p align="center">
     <img src="images/lab.PNG">
