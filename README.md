@@ -118,16 +118,16 @@ Some of the coloration results on test set are shown below. The picture on the l
 
 We calculate FID and LPIPS on 2000 images from the COCO-stuff validation set. The average test set LPIPS was 0.139. The table below highlights the FID scores - 
 
-<table>
+<table style="margin: auto">
   <tr>
     <th>Our Model</th>
     <th>Pix2Pix</th>
     <th>Palette (SOTA)</th>
   </tr>
   <tr>
-    <td style="text-align: center">21.2</td>
-    <td style="text-align: center">24.41</td>
-    <td style="text-align: center">15.78</td>
+    <td>21.2</td>
+    <td>24.41</td>
+    <td>15.78</td>
   </tr>
 </table>
 
