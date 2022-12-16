@@ -154,4 +154,7 @@ We tested the model on images we clicked with an iPhone. While the model is not 
 </p>
 
 
+## Links
+
+1. [Project Presentation] (https://arxiv.org/abs/2005.10825)
 
