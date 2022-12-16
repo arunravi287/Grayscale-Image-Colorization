@@ -26,7 +26,7 @@ the region which is visible to human eyes. Inside this region, many color models
 display devices, perceivability and more. One of the most  common color spaces is the sRGB color space which is adpoted as a standard color space for the World Wide Web. 
 
 <p align="center">
-    <img src="images/color_gamut.png">
+    <img src="images/color_gamut.PNG">
 </p>
 
 One of the important color spaces is the CIE L*a*b* color space which was designed to be be perceptually uniform. That is, a numeric change should correspond to similar perceived change in color. The range of variation of L (Lightness), a(green-red), b(blue-yellow) is described in the figure below.
@@ -34,7 +34,7 @@ One of the important color spaces is the CIE L*a*b* color space which was design
 We adopt this Lab color space for solving the coloration problem as adopted by many other works in coloration.
 
 <p align="center">
-    <img src="images/lab.png">
+    <img src="images/lab.PNG">
 </p>
 
 ## Model Architecture
