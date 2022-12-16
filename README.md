@@ -83,7 +83,7 @@ The generator network used in the cGAN for grayscale image colorization is a UNe
 Recently, it has been shown that replacing the standard encoder in UNet with ResNet blocks can improve the performance on image-to-image translation tasks. As shown in figure below, each downsampling layer is a Resnet Block. We adapt this Unet encoder architecture for our model.
 
 <p align="center">
-    <img src="images/unet_resnet.png">
+    <img src="images/unet_resnet.PNG">
 </p>
 
 ### PatchGAN (Discriminator)
