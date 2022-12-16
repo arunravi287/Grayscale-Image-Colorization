@@ -156,5 +156,18 @@ We tested the model on images we clicked with an iPhone. While the model is not 
 
 ## Links
 
-1. [Project Presentation] (https://arxiv.org/abs/2005.10825)
+1. [Project Presentation] (https://docs.google.com/presentation/d/1ETVOi3vrmDBB708tWbigWofgOdq-_dUJDXnBRXTEFSY/edit?usp=sharing)
+2. [Code-Github] (https://github.com/arunravi287/Grayscale-Image-Colorization)
 
+## References
+
+1. Image-to-Image Translation with Conditional Adversarial Networks, https://doi.org/10.48550/arxiv.1611.07004, Isola, Phillip and Zhu, Jun-Yan and Zhou, Tinghui and Efros, Alexei A. CVPR, 2016 ![image](https://user-images.githubusercontent.com/10402776/207995576-8bc251cb-0fe4-403d-9221-d76a3e42b771.png)
+
+2. Palette: Image-to-Image Diffusion Models, Chitwan Saharia et.al , 2021![image](https://user-images.githubusercontent.com/10402776/207995623-bd483b68-6089-4bd2-92c1-3b1a184b081e.png)
+
+3. https://rodrigoberriel.com/2014/11/opencv-color-spaces-splitting-channels/
+![image](https://user-images.githubusercontent.com/10402776/207995638-ef2b68f3-5a96-4ee9-89ff-a917b1865b07.png)
+
+4. https://www.researchgate.net/figure/The-architecture-of-the-U-Net-model-used-in-this-study- 
+       with-an-input-sample-size-of-256_fig2_341034897
+![image](https://user-images.githubusercontent.com/10402776/207995659-4a88397f-8e91-4a50-8705-1c9154b41ec0.png)
