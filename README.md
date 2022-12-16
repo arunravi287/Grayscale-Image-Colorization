@@ -99,10 +99,6 @@ We trained the conditional UNet based cGAN on 8000 images for 100 epochs. The im
     <img src="results/lpips/six.png">
 </p>
 
-### Hyperparameters
-
-The learning rate we used for the generator and discriminator is 1e-4. The constant which controls the amount L1 loss contributes to the overall loss was set to 100. The values of momentum constants fed into the Adam Optimizer are 0.5 and 0.999.
-
 ## Inference
 During inference we use a trained generator to produce the a and b channels of an image from the input L channel. We further combine all three channels to get the resultant colored image. The following image shows the above mentioned procedure.
 
@@ -128,7 +124,7 @@ We calculate FID and LPIPS on the 2000 images from the COCO-stuff validation set
 ## Experiments
 
 ### Different forms of Grayscale Input
-We also experimented on how the output differs when we change the type of grayscale image input into the model. For this experiment, we convert the original colored image into - a) YCbCr image b) Linearly RGB Weighted Grayscale Image. The Y channel of the YCbCr image is grayscale. Thus we input the Y channel into the model. The below results show the images generated when we use varying grayscale images as input. We see that the colored images produced are very similar, and this can also be seen in the corresponding LPIPS scores.
+We also experimented on how the output differs when we change the type of grayscale image input into the model. For this experiment, we convert the original colored image into - a) YCbCr image b) Linearly RGB Weighted Grayscale Image. The Y channel of the YCbCr image is grayscale. Thus, we input the Y channel into the model. The below results show the images generated when we use varying grayscale images as input. We see that the colored images produced are very similar, and this can also be seen in the corresponding LPIPS scores.
 
 
 <p align="center">
@@ -137,10 +133,13 @@ We also experimented on how the output differs when we change the type of graysc
 </p>
 
 ### Results on Real Images
-We tested the model on the images we clicked with an iPhone. While the model does not perform well, we can still see that it is able to predict some shades of the right color. The picture on the left is the original colored image, the picture in the middle is the input grayscale image, and the image on the right is the output produced by our model.
+We tested the model on the images we clicked with an iPhone. While the model is not perfect, we can still see that it is able to predict some shades of the right color. The picture on the left is the original colored image, the picture in the middle is the input grayscale image, and the image on the right is the output produced by our model.
 
 <p align="center">
     <img src="results/realimages/one.png">
     <img src="results/realimages/two.png">
     <img src="results/realimages/three.png">
 </p>
+
+
+
