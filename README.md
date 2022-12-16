@@ -167,5 +167,3 @@ We tested the model on images we clicked with an iPhone. While the model is not 
 
 3. https://rodrigoberriel.com/2014/11/opencv-color-spaces-splitting-channels/
 
-4. https://www.researchgate.net/figure/The-architecture-of-the-U-Net-model-used-in-this-study- 
-       with-an-input-sample-size-of-256_fig2_341034897
