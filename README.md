@@ -93,8 +93,17 @@ A discriminator typically checks if a generated image is real or fake. However, 
     <img src="images/patch.png">
 </p>
 
-## Training
-We trained the conditional UNet based cGAN on 8000 images for 100 epochs. The images from the COCO-stuff dataset are first converted into the Lab color space. The L channel from the Lab color space is akin to a grayscale version of the image. Thus, the L channel is fed as input into the cGAN, and the model outputs the ab channels of the image. Attached below are the results obtained - the picture on the left is the original colored image, the picture in the middle is the input grayscale image, and the image on the right is the output produced by our model.
+### Training and Inference
+We trained the conditional UNet based cGAN on 8000 images for 100 epochs. The images from the COCO-stuff dataset are first converted into the Lab color space. The L channel from the Lab color space is akin to a grayscale version of the image. Thus, the L channel is fed as input into the cGAN, and the model outputs the ab channels of the image.
+
+During inference we use a trained generator to produce the a and b channels of an image from the input L channel. We further combine all three channels to get the resultant colored image. The following image describes the inference procedure.
+
+<p align="center">
+    <img src="images/inf.png">
+</p>
+
+## Results
+Some of the coloration results on test set are shown below. The picture on the left is the original colored image, the picture in the middle is the input grayscale image, and the image on the right is the output produced by our model.
 
 <p align="center">
     <img src="results/lpips/one.png">
@@ -105,14 +114,9 @@ We trained the conditional UNet based cGAN on 8000 images for 100 epochs. The im
     <img src="results/lpips/six.png">
 </p>
 
-## Inference
-During inference we use a trained generator to produce the a and b channels of an image from the input L channel. We further combine all three channels to get the resultant colored image. The following image shows the above mentioned procedure.
+### Quantitative Analysis
 
-<p align="center">
-    <img src="images/inf.png">
-</p>
-
-We calculate FID and LPIPS on the 2000 images from the COCO-stuff validation set. The average test set LPIPS was 0.139. The table below highlights the FID scores - 
+We calculate FID and LPIPS on 2000 images from the COCO-stuff validation set. The average test set LPIPS was 0.139. The table below highlights the FID scores - 
 
 <table>
   <tr>
@@ -127,10 +131,12 @@ We calculate FID and LPIPS on the 2000 images from the COCO-stuff validation set
   </tr>
 </table>
 
+We see that there is a performance gap compared to state-of-the-art model, Pallete. This diffusion based model is able to perform much better but it also has certain limitations. Specifically, the inference step of diffusion models is slow. Therefore, GAN based models are still useful in cases where faster inference is required.
+
 ## Experiments
 
 ### Different forms of Grayscale Input
-We also experimented on how the output differs when we change the type of grayscale image input into the model. For this experiment, we convert the original colored image into - a) YCbCr image b) Linearly RGB Weighted Grayscale Image. The Y channel of the YCbCr image is grayscale. Thus, we input the Y channel into the model. The below results show the images generated when we use varying grayscale images as input. We see that the colored images produced are very similar, and this can also be seen in the corresponding LPIPS scores.
+Here, we test how the output differs when we change the type of grayscale image input into the model. For this experiment, we convert the original colored image into - a) YCbCr image b) Linearly RGB Weighted Grayscale Image. The Y channel of the YCbCr image is grayscale. Thus, we input the Y channel into the model. The below results show the images generated when we use varying grayscale images as input. We see that the colored images produced are very similar, and this can also be seen in the corresponding LPIPS scores.
 
 
 <p align="center">
@@ -139,7 +145,7 @@ We also experimented on how the output differs when we change the type of graysc
 </p>
 
 ### Results on Real Images
-We tested the model on the images we clicked with an iPhone. While the model is not perfect, we can still see that it is able to predict some shades of the right color. The picture on the left is the original colored image, the picture in the middle is the input grayscale image, and the image on the right is the output produced by our model.
+We tested the model on images we clicked with an iPhone. While the model is not perfect, we can still see that it is able to predict some shades of the right color. The picture on the left is the original colored image, the picture in the middle is the input grayscale image, and the image on the right is the output produced by our model. 
 
 <p align="center">
     <img src="results/realimages/one.png">
